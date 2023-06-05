@@ -4,5 +4,5 @@ using Domain.Aggregate.Event;
 
 public interface IEventDispatcher
 {
-    Task Dispatch<TEvent>(TEvent Source) where TEvent : IEvent;
+    Task DispatchAsync<TEvent>(TEvent source) where TEvent : IEvent;
 }

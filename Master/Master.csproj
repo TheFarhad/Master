@@ -13,13 +13,20 @@
   <ItemGroup>
     <Folder Include="Core\Application\Common\" />
     <Folder Include="Core\Application\Query\" />
-    <Folder Include="Core\Contract\Infrastructure\Command\" />
-    <Folder Include="Core\Contract\Infrastructure\Common\" />
     <Folder Include="Core\Contract\Infrastructure\Query\" />
     <Folder Include="Core\Domain.Service\" />
-    <Folder Include="Core\Domain\Aggregate\Repository\" />
-    <Folder Include="Infrastructure\" />
     <Folder Include="Endpoint\" />
+    <Folder Include="Infrastructure\EFCore\Common\" />
+    <Folder Include="Infrastructure\EFCore\Query\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
