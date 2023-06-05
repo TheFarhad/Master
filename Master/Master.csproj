@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Core\Application\Common\" />
     <Folder Include="Core\Application\Query\" />
-    <Folder Include="Core\Contract\Application\Query\" />
     <Folder Include="Core\Contract\Infrastructure\Command\" />
     <Folder Include="Core\Contract\Infrastructure\Common\" />
     <Folder Include="Core\Contract\Infrastructure\Query\" />

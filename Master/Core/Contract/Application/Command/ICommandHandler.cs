@@ -2,11 +2,11 @@
 
 public interface ICommandHandler<TCommand> where TCommand : ICommand
 {
-    Task<CommandResult> Handle(TCommand Source);
+    Task<CommandResult> HandleAsync(TCommand Source);
 }
 
 public interface ICommandHandler<TCommand, TResult> where TCommand : ICommand<TResult>
 {
-    Task<CommandResult<TResult>> Handle(TCommand Source);
+    Task<CommandResult<TResult>> HandleAsync(TCommand Source);
 }
 

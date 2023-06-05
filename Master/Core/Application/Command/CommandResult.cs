@@ -1,6 +1,6 @@
 ﻿namespace Master.Core.Application.Command;
 
-using Common;
+using Contract.Application.Common;
 
 public class CommandResult : ServiceResult { }
 
