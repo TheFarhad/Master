@@ -118,7 +118,7 @@ public class CommandDbContext : DbContext
 
     #region aggregate's relations
 
-    public IEnumerable<string> Relations(Type clrEntityType)
+    public IEnumerable<string> RelationsGraph(Type clrEntityType)
     {
         var entityType = Model.FindEntityType(clrEntityType);
         var includedNavigations = new HashSet<INavigation>();

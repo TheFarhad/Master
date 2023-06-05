@@ -15,7 +15,7 @@ public interface ICommandRepository<TEntity> where TEntity : AggregateRoot
     Task<TEntity>? GetAsync(long id);
     Task<TEntity>? GetGrapthAsync(long id);
     TEntity? Get(Code code);
-    TEntity GetGraph(Code code);
+    TEntity? GetGraph(Code code);
     Task<TEntity>? GetAsync(Code code);
     Task<TEntity>? GetGraphAsync(Code code);
     TEntity? Get(Expression<Func<TEntity, bool>> expression);

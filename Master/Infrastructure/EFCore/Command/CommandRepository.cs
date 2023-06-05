@@ -26,31 +26,16 @@ public class CommandRepository<TEntity, TContext> : ICommandRepository<TEntity> 
     public Task BulkAddAsync(IEnumerable<TEntity> source) => _context.AddRangeAsync(source);
 
     public TEntity? Get(long id) => Set().Find(id);
-    public TEntity? Get(Code code) => Set().FirstOrDefault(_ => _.Code.Value == code.Value);
+    public TEntity? Get(Code code) => Set().FirstOrDefault(_ => _.Code == code);
     public TEntity? Get(Expression<Func<TEntity, bool>> expression) => Set().FirstOrDefault(expression);
     public async Task<TEntity>? GetAsync(long id) => await Set().FindAsync(id);
     public async Task<TEntity>? GetAsync(Code code) => await Set().FirstOrDefaultAsync(_ => _.Code.Value == code.Value);
     public async Task<TEntity>? GetAsync(Expression<Func<TEntity, bool>> expression) => await Set().FirstOrDefaultAsync(expression);
 
-    public TEntity GetGraph(long id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public TEntity GetGraph(Code code)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<TEntity> GetGraphAsync(Code code)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<TEntity> GetGrapthAsync(long id)
-    {
-        throw new NotImplementedException();
-    }
+    public TEntity? GetGraph(long id) => IncludeGraph().FirstOrDefault(_ => _.Id == id);
+    public TEntity? GetGraph(Code code) => IncludeGraph().FirstOrDefault(_ => _.Code == code);
+    public async Task<TEntity>? GetGrapthAsync(long id) => await IncludeGraph().FirstOrDefaultAsync(_ => _.Id == id);
+    public async Task<TEntity>? GetGraphAsync(Code code) => await IncludeGraph().FirstOrDefaultAsync(_ => _.Code == code);
 
     public void Remove(TEntity source) => Set().Remove(source);
     public void Remove(long id)
@@ -74,7 +59,16 @@ public class CommandRepository<TEntity, TContext> : ICommandRepository<TEntity> 
 
     protected DbSet<TEntity> Set() => _context.Set<TEntity>();
 
-    private IEnumerable<string> Relations() => _context.Relations(typeof(TEntity));
+    private IEnumerable<string> RelationsGraph() => _context.RelationsGraph(typeof(TEntity));
+
+    private IQueryable<TEntity> IncludeGraph()
+    {
+        var result = Set().AsQueryable();
+        var paths = RelationsGraph();
+        foreach (var item in paths)
+            result = result.Include(item);
+        return result;
+    }
 
     #endregion
 }
