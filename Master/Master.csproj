@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Microservice Framework</Title>
+    <Authors>Farhad Kazemi</Authors>
+    <Description>Base Framework To Develop Microservice Application</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Core\Application\Query\" />
+    <Folder Include="Core\Contract\Application\Query\" />
+    <Folder Include="Core\Contract\Infrastructure\Command\" />
+    <Folder Include="Core\Contract\Infrastructure\Common\" />
+    <Folder Include="Core\Contract\Infrastructure\Query\" />
+    <Folder Include="Core\Domain.Service\" />
+    <Folder Include="Core\Domain\Aggregate\Repository\" />
+    <Folder Include="Infrastructure\" />
+    <Folder Include="Endpoint\" />
+  </ItemGroup>
+
+</Project>
