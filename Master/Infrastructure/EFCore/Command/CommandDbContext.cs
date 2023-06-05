@@ -16,6 +16,7 @@ public class CommandDbContext : DbContext
 
     public override int SaveChanges()
     {
+        BeforeSave();
         return base.SaveChanges();
     }
 
