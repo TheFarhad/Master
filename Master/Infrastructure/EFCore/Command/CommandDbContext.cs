@@ -1,9 +1,10 @@
 ﻿namespace Master.Infrastructure.EFCore.Command;
 
-using Master.Utilities.Extentions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using System.Threading;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage;
+using Utilities.Extentions;
 
 public class CommandDbContext : DbContext
 {
@@ -11,7 +12,7 @@ public class CommandDbContext : DbContext
 
     public CommandDbContext(DbContextOptions options) : base(options) { }
 
-
+    #region save
 
     public override int SaveChanges()
     {
@@ -33,39 +34,140 @@ public class CommandDbContext : DbContext
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
-    public void BeginTransaction() =>
-        _transaction = Database.BeginTransaction();
+    #endregion
 
-    public async Task BeginTransactionAsync() =>
+    #region transaction
+
+    private void BeginTransaction() =>
+       _transaction = Database.BeginTransaction();
+    private async Task BeginTransactionAsync() =>
        _transaction = await Database.BeginTransactionAsync();
 
-    public void Commit()
+    private void Commit()
     {
         ValidateTransaction();
         _transaction.Commit();
     }
-
-    public async Task CommitAsync()
+    private async Task CommitAsync()
     {
         ValidateTransaction();
         await _transaction.CommitAsync();
     }
 
-    public void Rollback()
+    private void Rollback()
     {
         ValidateTransaction();
         _transaction.Rollback();
     }
-
-    public async Task RollbackAsync()
+    private async Task RollbackAsync()
     {
         ValidateTransaction();
         await _transaction.RollbackAsync();
     }
+
+    public string TransactionalAction(Action action)
+    {
+        var result = String.Empty;
+        try
+        {
+            if (action is not null)
+            {
+                BeginTransaction();
+                action.Invoke();
+                SaveChanges();
+                Commit();
+            }
+        }
+        catch (Exception e)
+        {
+            Rollback();
+            result = e.Message;
+        }
+        finally
+        {
+            //Dispose();
+        }
+        return result;
+    }
+    public async Task<string> TransactionalActionAsync(Action action)
+    {
+        var result = String.Empty;
+        try
+        {
+            if (action is not null)
+            {
+                await BeginTransactionAsync();
+                action.Invoke();
+                await SaveChangesAsync();
+                await CommitAsync();
+            }
+        }
+        catch (Exception e)
+        {
+            await RollbackAsync();
+            result = e.Message;
+        }
+        finally
+        {
+            //Dispose();
+        }
+        return result;
+    }
+
+    #endregion
+
+    #region aggregate's relations
+
+    public IEnumerable<string> Relations(Type clrEntityType)
+    {
+        var entityType = Model.FindEntityType(clrEntityType);
+        var includedNavigations = new HashSet<INavigation>();
+        var stack = new Stack<IEnumerator<INavigation>>();
+        while (true)
+        {
+            var navigations = new List<INavigation>();
+            var entityNavigations = entityType.GetNavigations();
+            foreach (var item in entityNavigations)
+            {
+                if (includedNavigations.Add(item))
+                    navigations.Add(item);
+            }
+            if (navigations.Count == 0)
+            {
+                if (stack.Count > 0)
+                    yield return string.Join(".", stack.Reverse().Select(e => e.Current.Name));
+            }
+            else
+            {
+                foreach (var navigation in navigations)
+                {
+                    var inverseNavigation = navigation.Inverse;
+                    if (inverseNavigation != null)
+                        includedNavigations.Add(inverseNavigation);
+                }
+                stack.Push(navigations.GetEnumerator());
+            }
+            while (stack.Count > 0 && !stack.Peek().MoveNext())
+                stack.Pop();
+            if (stack.Count == 0) break;
+            entityType = stack.Peek().Current.TargetEntityType;
+        }
+    }
+
+    #endregion
+
+    #region utilities
 
     private void ValidateTransaction()
     {
         if (_transaction.IsNull())
             throw new NullReferenceException("Please call `BeginTransaction()` method first.");
     }
+
+    protected virtual void BeforeSave()
+    {
+
+    }
+
+    #endregion
 }
