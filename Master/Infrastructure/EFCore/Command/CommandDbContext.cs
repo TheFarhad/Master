@@ -9,6 +9,7 @@ using Utilities.Extentions;
 using Common.ValueConversion;
 using Core.Domain.Common.ValueObjects;
 using Core.Contract.Application.Event;
+using System.Globalization;
 
 public class CommandDbContext : DbContext
 {
@@ -228,6 +229,12 @@ public class CommandDbContext : DbContext
             var events = item.Events;
             foreach (dynamic _ in events) dispatcher.DispatchAsync(_);
         }
+    }
+
+    public T GetShadowProperty<T>(object source, string propertyName) where T : IConvertible
+    {
+        var value = Entry(source).Property(propertyName).CurrentValue;
+        return value.IsNotNull() ? value.ChangeType<T>(CultureInfo.InvariantCulture) : default;
     }
 
     #endregion
