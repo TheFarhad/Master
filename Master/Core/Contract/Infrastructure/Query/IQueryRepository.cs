@@ -2,4 +2,5 @@
 
 public interface IQueryRepository
 {
+    void X();
 }
