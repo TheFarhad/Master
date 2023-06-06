@@ -1,4 +1,4 @@
-﻿namespace Master.Infrastructure.EFCore;
+﻿namespace Master.Infrastructure.EFCore.Common;
 
 using Command;
 using Core.Contract.Infrastructure.Common;

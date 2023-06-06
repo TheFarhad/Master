@@ -4,7 +4,11 @@ using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Utilities.Extentions;
+using Common.ValueConversion;
+using Core.Domain.Common.ValueObjects;
+using Core.Contract.Application.Event;
 
 public class CommandDbContext : DbContext
 {
@@ -12,27 +16,62 @@ public class CommandDbContext : DbContext
 
     public CommandDbContext(DbContextOptions options) : base(options) { }
 
+    #region configration
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.AddCode();
+        modelBuilder.AddAuditableShadowProperties();
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        base.ConfigureConventions(configurationBuilder);
+
+        configurationBuilder.Properties<Title>().HaveConversion<TitleConversion>();
+        configurationBuilder.Properties<Description>().HaveConversion<DescriptionConversion>();
+        configurationBuilder.Properties<NationalCode>().HaveConversion<NationalCodeConversion>();
+        configurationBuilder.Properties<Priority>().HaveConversion<PriorityConversion>();
+        configurationBuilder.Properties<Register>().HaveConversion<RegisterConversion>();
+    }
+    #endregion
+
     #region save
 
     public override int SaveChanges()
     {
         BeforeSave();
-        return base.SaveChanges();
+        ChangeTracker.AutoDetectChangesEnabled = false;
+        var result = base.SaveChanges();
+        ChangeTracker.AutoDetectChangesEnabled = true;
+        return result;
     }
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        return base.SaveChanges(acceptAllChangesOnSuccess);
+        BeforeSave();
+        ChangeTracker.AutoDetectChangesEnabled = false;
+        var result = base.SaveChanges(acceptAllChangesOnSuccess);
+        ChangeTracker.AutoDetectChangesEnabled = true;
+        return result;
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return base.SaveChangesAsync(cancellationToken);
+        BeforeSave();
+        ChangeTracker.AutoDetectChangesEnabled = false;
+        var result = await base.SaveChangesAsync(cancellationToken);
+        ChangeTracker.AutoDetectChangesEnabled = true;
+        return result;
     }
 
-    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
-        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        ChangeTracker.AutoDetectChangesEnabled = false;
+        var result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        ChangeTracker.AutoDetectChangesEnabled = true;
+        return result;
     }
 
     #endregion
@@ -167,7 +206,28 @@ public class CommandDbContext : DbContext
 
     protected virtual void BeforeSave()
     {
+        ChangeTracker.DetectChanges();
+        SetShadowProperties();
+        DispatchEvents();
+    }
 
+    // روش بهینه این است که با اینترسپتور نوشته شود
+    private void SetShadowProperties()
+    {
+        //var userService = this.GetService<IUserService>();
+        ChangeTracker.SetAuditableEntityShadowPropertyValues(/*userService*/);
+    }
+
+    // روش بهینه این است که با اینترسپتور نوشته شود
+    private void DispatchEvents()
+    {
+        var dispatcher = this.GetService<IEventDispatcher>();
+        var aggregates = ChangeTracker.AggregateWithEvents();
+        foreach (var item in aggregates)
+        {
+            var events = item.Events;
+            foreach (dynamic _ in events) dispatcher.DispatchAsync(_);
+        }
     }
 
     #endregion

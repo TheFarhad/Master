@@ -13,11 +13,8 @@
   <ItemGroup>
     <Folder Include="Core\Application\Common\" />
     <Folder Include="Core\Application\Query\" />
-    <Folder Include="Core\Contract\Infrastructure\Query\" />
     <Folder Include="Core\Domain.Service\" />
     <Folder Include="Endpoint\" />
-    <Folder Include="Infrastructure\EFCore\Common\" />
-    <Folder Include="Infrastructure\EFCore\Query\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -59,12 +59,10 @@ public class CommandRepository<TEntity, TContext> : ICommandRepository<TEntity> 
 
     protected DbSet<TEntity> Set() => _context.Set<TEntity>();
 
-    private IEnumerable<string> RelationsGraph() => _context.RelationsGraph(typeof(TEntity));
-
     private IQueryable<TEntity> IncludeGraph()
     {
         var result = Set().AsQueryable();
-        var paths = RelationsGraph();
+        var paths = _context.RelationsGraph(typeof(TEntity));
         foreach (var item in paths)
             result = result.Include(item);
         return result;
