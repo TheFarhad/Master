@@ -2,5 +2,5 @@
 
 public interface IQueryDispatcher
 {
-    Task<QueryResult<TData>> DispatchAsync<TQuery, TData>(TQuery source) where TQuery : IQuery<TData>;
+    Task<QueryResult<TPayload>> DispatchAsync<TQuery, TPayload>(TQuery source) where TQuery : IQuery<TPayload>;
 }

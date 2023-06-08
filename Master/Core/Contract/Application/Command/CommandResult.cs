@@ -3,7 +3,7 @@
 using Common;
 
 public class CommandResult : ServiceResult { }
-public class CommandResult<TData> : ServiceResult
+public class CommandResult<TPayload> : ServiceResult
 {
-    public TData? Payload { get; set; }
+    public TPayload? Payload { get; set; }
 }

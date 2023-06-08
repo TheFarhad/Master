@@ -2,7 +2,7 @@
 
 using Common;
 
-public class QueryResult<TData> : ServiceResult
+public class QueryResult<TPayload> : ServiceResult
 {
-    public TData? Payload { get; set; }
+    public TPayload? Payload { get; set; }
 }

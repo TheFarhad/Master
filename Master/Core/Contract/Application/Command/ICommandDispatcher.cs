@@ -2,6 +2,6 @@
 
 public interface ICommandDispatcher
 {
-    Task<CommandResult> DispatchAsync<TCommand>(TCommand Source) where TCommand : ICommand;
-    Task<CommandResult<TData>> DispatchAsync<TCommand, TData>(TCommand source) where TCommand : ICommand<TData>;
+    Task<CommandResult> DispatchAsync<TCommand>(TCommand source) where TCommand : ICommand;
+    Task<CommandResult<TPayload>> DispatchAsync<TCommand, TPayload>(TCommand source) where TCommand : ICommand<TPayload>;
 }

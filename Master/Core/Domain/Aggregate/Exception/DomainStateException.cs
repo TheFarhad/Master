@@ -1,7 +1,7 @@
 ﻿namespace Master.Core.Domain.Aggregate.Exception;
 
 using System;
-using Master.Utilities.Extentions;
+using Utilities.Extentions;
 
 public abstract class DomainStateException : Exception
 {

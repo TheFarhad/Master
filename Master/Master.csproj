@@ -15,9 +15,13 @@
 		<Folder Include="Core\Application\Query\" />
 		<Folder Include="Core\Domain.Service\" />
 		<Folder Include="Endpoint\" />
+		<Folder Include="Utilities\Observability\" />
+		<Folder Include="Utilities\Services\Implementation\Mapping\" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="FluentValidation" Version="11.5.2" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
