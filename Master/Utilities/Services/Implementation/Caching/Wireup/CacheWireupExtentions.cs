@@ -1,10 +1,10 @@
 ﻿namespace Master.Utilities.Services.Implementation.Caching.Wireup;
 
 using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Abstraction.Caching;
-using Microsoft.Data.SqlClient;
 
 public static class CacheWireupExtentions
 {
@@ -60,12 +60,26 @@ public static class CacheWireupExtentions
 
         new SqlConnection(configs.ConnectionString)
             .Execute(command);
-
-        #endregion
-
-        #region redis cache
-
-
-        #endregion
     }
+
+    #endregion
+
+    #region redis cache
+    public static IServiceCollection DistributedRedisCacheWireup(IServiceCollection source, IConfiguration configuration, string configSectionName)
+    {
+        source.AddTransient<ICache, DistributedRedisCache>();
+        source.Configure<DistributedRedisCacheConfig>(configuration.GetSection(configSectionName));
+        var configs = configuration.Get<DistributedRedisCacheConfig>();
+
+        source.AddStackExchangeRedisCache(_ =>
+        {
+            _.InstanceName = configs.InstanceName;
+            _.Configuration = configs.Configuration;
+        })
+       /* .AddTransient<ICache, DistributedRedisCache>()*/;
+
+        return source;
+    }
+
+    #endregion
 }
