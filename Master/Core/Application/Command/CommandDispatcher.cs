@@ -71,8 +71,8 @@ public class CommandDispatcher : ICommandDispatcher
            _logger.LogDebug("Routing command of type {CommandType} With value {Command}  Start at {StartDateTime}", commandType, source, DateTime.Now);
 
     private void LogError(Exception exception, Type commandType) =>
-        _logger.LogError(exception, "There is not suitable handler for {CommandType} Routing failed at {StartDateTime}.", commandType, DateTime.Now);
+         _logger.LogError(exception, "There is not suitable handler for {CommandType} Routing failed at {StartDateTime}.", commandType, DateTime.Now);
 
     private void LogFinal(Type commandType) =>
-   _logger.LogInformation("Processing the {CommandType} command tooks {Millisecconds} Millisecconds", commandType, _timer.ElapsedMilliseconds);
+         _logger.LogInformation("Processing the {CommandType} command tooks {Millisecconds} Millisecconds", commandType, _timer.ElapsedMilliseconds);
 }

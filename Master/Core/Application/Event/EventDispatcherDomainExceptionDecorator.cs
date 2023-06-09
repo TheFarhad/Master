@@ -22,15 +22,19 @@ public class EventDispatcherDomainExceptionDecorator : EventDispatcherDecorator
         }
         catch (DomainStateException e)
         {
-            _logger.LogError(e, "Processing of {EventType} With value {Event} failed at {StartDateTime} because there are domain exceptions.", type, source, DateTime.Now);
+            LogError(source, type, e);
         }
         catch (AggregateException e)
         {
             if (e.InnerException is DomainStateException ie)
-            {
-                _logger.LogError(ie, "Processing of {EventType} With value {Event} failed at {StartDateTime} because there are domain exceptions.", type, source, DateTime.Now);
-            }
+                LogError(source, type, ie);
+
             throw e;
         }
+    }
+
+    private void LogError<TEvent>(TEvent source, Type @event, Exception exception)
+    {
+        _logger.LogError(exception, "Processing of {EventType} With value {Event} failed at {StartDateTime} because there are domain exceptions.", @event, source, DateTime.Now);
     }
 }
