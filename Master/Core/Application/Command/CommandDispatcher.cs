@@ -21,7 +21,7 @@ public class CommandDispatcher : ICommandDispatcher
 
     public async Task<CommandResult> DispatchAsync<TCommand>(TCommand source) where TCommand : ICommand
     {
-        var type = CommandType(source);
+        var type = source.Type();
         _timer.Start();
         try
         {
@@ -44,7 +44,7 @@ public class CommandDispatcher : ICommandDispatcher
 
     public async Task<CommandResult<TPayload>> DispatchAsync<TCommand, TPayload>(TCommand source) where TCommand : ICommand<TPayload>
     {
-        var type = CommandType(source);
+        var type = source.Type();
         _timer.Start();
         try
         {
@@ -64,8 +64,6 @@ public class CommandDispatcher : ICommandDispatcher
             LogFinal(type);
         }
     }
-
-    private Type CommandType<TCommand>(TCommand Source) => Source.Type();
 
     private void LogStart<TCommand>(TCommand source, Type commandType) =>
            _logger.LogDebug("Routing command of type {CommandType} With value {Command}  Start at {StartDateTime}", commandType, source, DateTime.Now);

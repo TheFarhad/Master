@@ -3,6 +3,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Utilities.Extentions;
 using Domain.Aggregate.Event;
 using Contract.Application.Event;
 
@@ -23,7 +24,7 @@ public class EventDispatcher : IEventDispatcher
     {
         _timer.Start();
         var counter = 0;
-        var type = source.GetType();
+        var type = source.Type();
         try
         {
             _logger.LogDebug("Routing event of type {EventType} With value {Event}  Start at {StartDateTime}", type, source, DateTime.Now);

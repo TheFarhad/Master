@@ -16,48 +16,60 @@ public class CommandDispacherDomainExceptionDecorator : CommandDispacherDecorato
 
     public override async Task<CommandResult> DispatchAsync<TCommand>(TCommand source)
     {
+        var result = default(CommandResult);
         var type = CommandType(source);
         try
         {
-            return await Dispatcher.DispatchAsync<TCommand>(source);
+            result = await Dispatcher.DispatchAsync<TCommand>(source);
         }
         catch (DomainStateException e)
         {
-            LogError(source, type, e);
-            return DomainExceptionHandlingWithoutReturnValue(e);
+            return DomainExceptionCatchResult<TCommand>(source, type, e);
         }
         catch (AggregateException e)
         {
             if (e.InnerException is DomainStateException ex)
-            {
-                LogError(source, type, e);
-                return DomainExceptionHandlingWithoutReturnValue(ex);
-            }
-            throw;
+                return DomainExceptionCatchResult<TCommand>(source, type, ex);
+            else
+                throw;
         }
+        return result;
     }
 
     public override async Task<CommandResult<TPayload>> DispatchAsync<TCommand, TPayload>(TCommand source)
     {
+        var result = default(CommandResult<TPayload>);
         var type = CommandType(source);
         try
         {
-            return await Dispatcher.DispatchAsync<TCommand, TPayload>(source);
+            result = await Dispatcher.DispatchAsync<TCommand, TPayload>(source);
         }
         catch (DomainStateException e)
         {
-            LogError(source, type, e);
-            return DomainExceptionHandlingWithoutReturnValue<TPayload>(e);
+            return DomainExceptionCatchResult<TCommand, TPayload>(source, type, e);
         }
         catch (AggregateException e)
         {
             if (e.InnerException is DomainStateException ex)
-            {
-                LogError(source, type, ex);
-                return DomainExceptionHandlingWithoutReturnValue<TPayload>(ex);
-            }
-            throw e;
+                return DomainExceptionCatchResult<TCommand, TPayload>(source, type, ex);
+            else
+                throw e;
         }
+        return result;
+    }
+
+    #region utilities
+
+    private CommandResult DomainExceptionCatchResult<TCommand>(TCommand source, Type commandType, DomainStateException exception)
+    {
+        LogError(source, commandType, exception);
+        return DomainExceptionHandlingWithoutReturnValue(exception);
+    }
+
+    private CommandResult<TPayload> DomainExceptionCatchResult<TCommand, TPayload>(TCommand source, Type commandType, DomainStateException exception)
+    {
+        LogError(source, commandType, exception);
+        return DomainExceptionHandlingWithoutReturnValue<TPayload>(exception);
     }
 
     private Type CommandType<TCommand>(TCommand source) => source.Type();
@@ -89,18 +101,10 @@ public class CommandDispacherDomainExceptionDecorator : CommandDispacherDecorato
 
     private string GetExceptionText(DomainStateException source)
     {
-        var result = String.Empty;
-
-        //var translator = _serviceProvider.GetService<ITranslator>();
-        //if (translator == null)
-        //    return source.ToString();
-
-        //var result = (source?.Parameters.Any() == true) ?
-        //     translator[source.Message, source.Parameters] :
-        //       translator[source?.Message];
-
+        var result = source.ToString();
         _logger.LogInformation("Domain Exception message is {DomainExceptionMessage}", result);
-
         return result;
     }
+
+    #endregion
 }
