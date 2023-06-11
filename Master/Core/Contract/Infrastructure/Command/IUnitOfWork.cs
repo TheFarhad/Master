@@ -1,4 +1,4 @@
-﻿namespace Master.Core.Contract.Infrastructure.Common;
+﻿namespace Master.Core.Contract.Infrastructure.Command;
 
 public interface IUnitOfWork
 {

@@ -1,20 +1,24 @@
 ﻿namespace Master.Infrastructure.EFCore.Command;
 
+using System;
 using System.Threading;
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Interceptor;
 using Utilities.Extentions;
 using Common.ValueConversion;
 using Core.Domain.Common.ValueObjects;
 using Core.Contract.Application.Event;
-using System.Globalization;
+using Utilities.Services.Abstraction.Identity;
 
 public class CommandDbContext : DbContext
 {
     private IDbContextTransaction _transaction;
 
+    protected CommandDbContext() { }
     public CommandDbContext(DbContextOptions options) : base(options) { }
 
     #region configration
@@ -36,42 +40,53 @@ public class CommandDbContext : DbContext
         configurationBuilder.Properties<Priority>().HaveConversion<PriorityConversion>();
         configurationBuilder.Properties<Register>().HaveConversion<RegisterConversion>();
     }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.AddInterceptors(new CommandDbContextInterceptor());
+    }
     #endregion
 
     #region save
 
     public override int SaveChanges()
     {
-        BeforeSave();
-        ChangeTracker.AutoDetectChangesEnabled = false;
+        //ChangeTracker.DetectChanges();
+        //BeforeSave();
+        //ChangeTracker.AutoDetectChangesEnabled = false;
         var result = base.SaveChanges();
-        ChangeTracker.AutoDetectChangesEnabled = true;
+        //ChangeTracker.AutoDetectChangesEnabled = true;
         return result;
     }
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        BeforeSave();
-        ChangeTracker.AutoDetectChangesEnabled = false;
+        //ChangeTracker.DetectChanges();
+        //BeforeSave();
+        //ChangeTracker.AutoDetectChangesEnabled = false;
         var result = base.SaveChanges(acceptAllChangesOnSuccess);
-        ChangeTracker.AutoDetectChangesEnabled = true;
+        //ChangeTracker.AutoDetectChangesEnabled = true;
         return result;
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        BeforeSave();
-        ChangeTracker.AutoDetectChangesEnabled = false;
+        //ChangeTracker.DetectChanges();
+        //BeforeSave();
+        //ChangeTracker.AutoDetectChangesEnabled = false;
         var result = await base.SaveChangesAsync(cancellationToken);
-        ChangeTracker.AutoDetectChangesEnabled = true;
+        //ChangeTracker.AutoDetectChangesEnabled = true;
         return result;
     }
 
     public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
-        ChangeTracker.AutoDetectChangesEnabled = false;
+        //ChangeTracker.DetectChanges();
+        //BeforeSave();
+        //ChangeTracker.AutoDetectChangesEnabled = false;
         var result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-        ChangeTracker.AutoDetectChangesEnabled = true;
+        //ChangeTracker.AutoDetectChangesEnabled = true;
         return result;
     }
 
@@ -79,10 +94,8 @@ public class CommandDbContext : DbContext
 
     #region transaction
 
-    private void BeginTransaction() =>
-       _transaction = Database.BeginTransaction();
-    private async Task BeginTransactionAsync() =>
-       _transaction = await Database.BeginTransactionAsync();
+    private void BeginTransaction() => _transaction = Database.BeginTransaction();
+    private async Task BeginTransactionAsync() => _transaction = await Database.BeginTransactionAsync();
 
     private void Commit()
     {
@@ -205,31 +218,31 @@ public class CommandDbContext : DbContext
             throw new NullReferenceException("Please call `BeginTransaction()` method first.");
     }
 
-    protected virtual void BeforeSave()
-    {
-        ChangeTracker.DetectChanges();
-        SetShadowProperties();
-        DispatchEvents();
-    }
+    //protected virtual void BeforeSave()
+    //{
+    //    SetShadowProperties();
+    //    DispatchEvents();
+    //}
 
-    // روش بهینه این است که با اینترسپتور نوشته شود
-    private void SetShadowProperties()
-    {
-        //var userService = this.GetService<IUserService>();
-        ChangeTracker.SetAuditableEntityShadowPropertyValues(/*userService*/);
-    }
+    //// روش بهینه این است که با اینترسپتور نوشته شود
+    //private void SetShadowProperties()
+    //{
+    //    var service = this.GetService<IUserService>();
+    //    ChangeTracker.SetAuditableEntityShadowPropertyValues(service);
+    //}
 
-    // روش بهینه این است که با اینترسپتور نوشته شود
-    private void DispatchEvents()
-    {
-        var dispatcher = this.GetService<IEventDispatcher>();
-        var aggregates = ChangeTracker.AggregateWithEvents();
-        foreach (var item in aggregates)
-        {
-            var events = item.Events;
-            foreach (dynamic _ in events) dispatcher.DispatchAsync(_);
-        }
-    }
+    //// روش بهینه این است که با اینترسپتور نوشته شود
+    //private void DispatchEvents()
+    //{
+    //    var dispatcher = this.GetService<IEventDispatcher>();
+    //    var aggregates = ChangeTracker.AggregateWithEvents();
+
+    //    foreach (var item in aggregates)
+    //    {
+    //        var events = item.Events;
+    //        foreach (dynamic _ in events) dispatcher.DispatchAsync(_);
+    //    }
+    //}
 
     public T GetShadowProperty<T>(object source, string propertyName) where T : IConvertible
     {

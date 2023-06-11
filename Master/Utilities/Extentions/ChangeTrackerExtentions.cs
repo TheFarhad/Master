@@ -3,13 +3,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Core.Domain.Aggregate.Entity;
+using Services.Abstraction.Identity;
 
 public static class ChangeTrackerExtentions
 {
-    public static void SetAuditableEntityShadowPropertyValues(this ChangeTracker source/*, IUserService userService*/)
+    public static void SetAuditableEntityShadowPropertyValues(this ChangeTracker source, IUserService userService)
     {
         var entities = source.Entries<Entity>();
-        var userId = ""/*userService.Id*/;
+        var userId = userService.Id();
         var dateTime = DateTime.UtcNow;
 
         var AddedEntries = entities.Where(_ => _.State == EntityState.Added);

@@ -1,4 +1,4 @@
-﻿namespace Master.Core.Contract.Infrastructure.Common;
+﻿namespace Master.Core.Contract.Infrastructure.Command;
 
 public class OutboxEvent
 {
@@ -8,7 +8,7 @@ public class OutboxEvent
     public string UserId { get; set; }
     public string EventName { get; set; }
     public string EventTypeName { get; set; }
-    public string EventPayload { get; set; }
+    public string Payload { get; set; }
     public string AggregateName { get; set; }
     public string AggregateTypeName { get; set; }
     public DateTime AccuredOn { get; set; }
