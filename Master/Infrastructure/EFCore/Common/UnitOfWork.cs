@@ -1,8 +1,7 @@
 ﻿namespace Master.Infrastructure.EFCore.Common;
 
 using Command;
-using Core.Contract.Infrastructure.Common;
-using Master.Core.Contract.Infrastructure.Command;
+using Core.Contract.Infrastructure.Command;
 
 public class UnitOfWork<TContext> : IUnitOfWork where TContext : CommandDbContext
 {

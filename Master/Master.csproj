@@ -14,6 +14,9 @@
 		<Folder Include="Core\Application\Common\" />
 		<Folder Include="Core\Contract\Infrastructure\Common\" />
 		<Folder Include="Core\Domain.Service\" />
+		<Folder Include="Endpoint\Filter\" />
+		<Folder Include="Endpoint\ModelBinding\" />
+		<Folder Include="Endpoint\Middleware\" />
 		<Folder Include="Utilities\Observability\" />
 		<Folder Include="Utilities\Services\Implementation\Mapping\" />
 	</ItemGroup>

@@ -1,8 +1,8 @@
 ﻿namespace Master.Infrastructure.EFCore.Command;
+
 using Microsoft.EntityFrameworkCore;
-using Core.Contract.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Master.Core.Contract.Infrastructure.Command;
+using Core.Contract.Infrastructure.Command;
 
 public class OutboxEventConfiguration : IEntityTypeConfiguration<OutboxEvent>
 {
