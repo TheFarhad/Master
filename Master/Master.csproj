@@ -11,24 +11,30 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Remove="Utilities\Extentions\NonValidatingValidator.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Folder Include="Core\Application\Common\" />
 		<Folder Include="Core\Contract\Infrastructure\Common\" />
 		<Folder Include="Core\Domain.Service\" />
-		<Folder Include="Endpoint\Filter\" />
-		<Folder Include="Endpoint\ModelBinding\" />
 		<Folder Include="Endpoint\Middleware\" />
 		<Folder Include="Utilities\Observability\" />
-		<Folder Include="Utilities\Services\Implementation\Mapping\" />
+		<Folder Include="Utilities\Services\Abstraction\MessageBus\" />
+		<Folder Include="Utilities\Services\Abstraction\Logging\" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="EPPlus" Version="6.2.3" />
 		<PackageReference Include="Scrutor" Version="4.2.2" />
 		<PackageReference Include="Dapper" Version="2.0.123" />
+		<PackageReference Include="AutoMapper" Version="12.0.1" />
 		<PackageReference Include="FluentValidation" Version="11.5.2" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />

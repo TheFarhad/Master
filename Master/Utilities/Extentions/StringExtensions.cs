@@ -1,5 +1,7 @@
 ﻿namespace Master.Utilities.Extentions;
 
+using Microsoft.Extensions.DependencyModel;
+using System.Reflection;
 using System.Text;
 
 public static class StringExtensions
