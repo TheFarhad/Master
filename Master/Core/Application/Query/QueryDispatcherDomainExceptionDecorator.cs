@@ -7,7 +7,7 @@ using Core.Domain.Aggregate.Exception;
 
 public class QueryDispatcherDomainExceptionDecorator : QueryDispatcherDecorator
 {
-    protected override int Order => 2;
+    public override int Order => 2;
     private readonly ILogger<QueryDispatcherDomainExceptionDecorator> _logger;
 
     public QueryDispatcherDomainExceptionDecorator(ILogger<QueryDispatcherDomainExceptionDecorator> logger) =>

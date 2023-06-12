@@ -18,10 +18,7 @@
 		<Folder Include="Core\Application\Common\" />
 		<Folder Include="Core\Contract\Infrastructure\Common\" />
 		<Folder Include="Core\Domain.Service\" />
-		<Folder Include="Endpoint\Middleware\" />
 		<Folder Include="Utilities\Observability\" />
-		<Folder Include="Utilities\Services\Abstraction\MessageBus\" />
-		<Folder Include="Utilities\Services\Abstraction\Logging\" />
 	</ItemGroup>
 
 	<ItemGroup>

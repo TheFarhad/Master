@@ -7,8 +7,7 @@ using Utilities.Extentions;
 
 public class EventDispatcherValidationDecorator : EventDispatcherDecorator
 {
-    // IEventDispatcher = EventDispatcherDomainExceptionDecorator
-    protected override int Order => 1;
+    public override int Order => 1;
     private readonly IServiceProvider _provider;
     private readonly ILogger<EventDispatcherValidationDecorator> _logger;
 

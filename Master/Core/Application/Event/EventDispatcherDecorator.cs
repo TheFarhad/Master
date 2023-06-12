@@ -6,7 +6,7 @@ using Contract.Application.Event;
 public abstract class EventDispatcherDecorator : IEventDispatcher
 {
     protected IEventDispatcher Dispatcher;
-    protected abstract int Order { get; }
+    public abstract int Order { get; }
 
     public void Set(IEventDispatcher dispatcher) => Dispatcher = dispatcher;
 

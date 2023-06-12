@@ -6,8 +6,7 @@ using Domain.Aggregate.Exception;
 
 public class EventDispatcherDomainExceptionDecorator : EventDispatcherDecorator
 {
-    // IEventDispatcher => EventDispatcher
-    protected override int Order => 2;
+    public override int Order => 2;
     private readonly ILogger<EventDispatcherDomainExceptionDecorator> _logger;
 
     public EventDispatcherDomainExceptionDecorator(ILogger<EventDispatcherDomainExceptionDecorator> logger) =>

@@ -1,10 +1,9 @@
 ﻿namespace Master.Utilities.Services.Implementation.Mapping;
 
-using Abstraction.Mapping;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Utilities.Assembly;
-using Master.Utilities.Assemble;
+using Utilities.Assemble;
+using Abstraction.Mapping;
 
 public static class AutoMapperWireupExtentions
 {

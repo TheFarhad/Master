@@ -5,7 +5,7 @@ using Contract.Application.Query;
 public abstract class QueryDispatcherDecorator : IQueryDispatcher
 {
     protected IQueryDispatcher Dispatcher;
-    protected abstract int Order { get; }
+    public abstract int Order { get; }
 
     public void Set(IQueryDispatcher dispatcher) => Dispatcher = dispatcher;
 

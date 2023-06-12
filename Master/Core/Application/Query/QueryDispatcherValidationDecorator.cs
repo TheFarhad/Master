@@ -7,13 +7,13 @@ using Utilities.Extentions;
 using Contract.Application.Query;
 using Contract.Application.Common;
 
-public class QueryDispatcherValidationDecoreator : QueryDispatcherDecorator
+public class QueryDispatcherValidationDecorator : QueryDispatcherDecorator
 {
-    protected override int Order => 1;
+    public override int Order => 1;
     private readonly IServiceProvider _service;
-    private readonly ILogger<QueryDispatcherValidationDecoreator> _logger;
+    private readonly ILogger<QueryDispatcherValidationDecorator> _logger;
 
-    public QueryDispatcherValidationDecoreator(ILogger<QueryDispatcherValidationDecoreator> logger, IServiceProvider service)
+    public QueryDispatcherValidationDecorator(ILogger<QueryDispatcherValidationDecorator> logger, IServiceProvider service)
     {
         _logger = logger;
         _service = service;

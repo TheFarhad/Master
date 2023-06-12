@@ -7,13 +7,13 @@ using Utilities.Extentions;
 using Contract.Application.Command;
 using Contract.Application.Common;
 
-public class CommandDispacherValidationDecorator : CommandDispacherDecorator
+public class CommandDispatcherValidationDecorator : CommandDispatcherDecorator
 {
-    protected override int Order => 1;
+    public override int Order => 1;
     private readonly IServiceProvider _service;
-    private readonly ILogger<CommandDispacherValidationDecorator> _logger;
+    private readonly ILogger<CommandDispatcherValidationDecorator> _logger;
 
-    public CommandDispacherValidationDecorator(ILogger<CommandDispacherValidationDecorator> logger, IServiceProvider service)
+    public CommandDispatcherValidationDecorator(ILogger<CommandDispatcherValidationDecorator> logger, IServiceProvider service)
     {
         _logger = logger;
         _service = service;

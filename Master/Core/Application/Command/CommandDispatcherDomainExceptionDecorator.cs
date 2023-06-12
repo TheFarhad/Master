@@ -6,12 +6,12 @@ using Contract.Application.Command;
 using Domain.Aggregate.Exception;
 using Contract.Application.Common;
 
-public class CommandDispacherDomainExceptionDecorator : CommandDispacherDecorator
+public class CommandDispatcherDomainExceptionDecorator : CommandDispatcherDecorator
 {
-    protected override int Order => 2;
-    private readonly ILogger<CommandDispacherDomainExceptionDecorator> _logger;
+    public override int Order => 2;
+    private readonly ILogger<CommandDispatcherDomainExceptionDecorator> _logger;
 
-    public CommandDispacherDomainExceptionDecorator(ILogger<CommandDispacherDomainExceptionDecorator> logger) =>
+    public CommandDispatcherDomainExceptionDecorator(ILogger<CommandDispatcherDomainExceptionDecorator> logger) =>
           _logger = logger;
 
     public override async Task<CommandResult> DispatchAsync<TCommand>(TCommand source)
