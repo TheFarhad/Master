@@ -40,7 +40,6 @@ public class EventDispatcherValidationDecorator : EventDispatcherDecorator
     {
         var result = new List<string>();
         var validator = _provider.GetService<IValidator<TEvent>>();
-
         if (validator.IsNotNull())
         {
             var validationResult = validator.Validate(source);

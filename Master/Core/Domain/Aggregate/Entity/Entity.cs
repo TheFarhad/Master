@@ -1,14 +1,16 @@
 ﻿namespace Master.Core.Domain.Aggregate.Entity;
+
 using ValueObject;
-using Master.Utilities.Extentions;
-using Master.Core.Domain.Aggregate.ValueObject;
+using Utilities.Extentions;
 
 public abstract class Entity : IEquatable<Entity>
 {
-    public long Id { get; private set; }
+    public long Id { get; protected set; }
     public Code Code { get; protected set; } = Code.New(Guid.NewGuid());
 
     protected Entity() { }
+
+    public override bool Equals(object? obj) => obj is Entity other && Id == other.Id;
 
     public static bool operator ==(Entity left, Entity right)
     {
@@ -18,15 +20,9 @@ public abstract class Entity : IEquatable<Entity>
         return result;
     }
 
-    public static bool operator !=(Entity left, Entity right) =>
-        !(left == right);
+    public static bool operator !=(Entity left, Entity right) => !(left == right);
 
-    public bool Equals(Entity? other) =>
-        this == other;
+    public bool Equals(Entity? other) => this == other;
 
-    public override bool Equals(object? obj) =>
-        obj is Entity other && Id == other.Id;
-
-    public override int GetHashCode() =>
-        Id.GetHashCode();
+    public override int GetHashCode() => Id.GetHashCode();
 }

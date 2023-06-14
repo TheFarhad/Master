@@ -30,7 +30,7 @@ public class QueryDispatcherValidationDecorator : QueryDispatcherDecorator
         if (validationResult?.Errors.Any() == true)
         {
             _logger.LogInformation("Validating query of type {QueryType} With value {Query}  failed. Validation errors are: {ValidationErrors}", type, source, validationResult.Errors);
-            result = validationResult;
+            result = await Task.FromResult(validationResult);
         }
 
         _logger.LogDebug("Validating query of type {QueryType} With value {Query}  finished at :{EndDateTime}", type, source, DateTime.Now);
@@ -39,7 +39,7 @@ public class QueryDispatcherValidationDecorator : QueryDispatcherDecorator
         return result;
     }
 
-    private QueryResult<TPayload> Validate<TQuery, TPayload>(TQuery source)
+    private QueryResult<TPayload>? Validate<TQuery, TPayload>(TQuery source)
     {
         var result = default(QueryResult<TPayload>);
         var validator = _service.GetRequiredService<IValidator<TQuery>>();

@@ -27,10 +27,10 @@ public class CommandDispatcherValidationDecorator : CommandDispatcherDecorator
         LogStart(source, type);
 
         var validationResult = Validate<TCommand, CommandResult>(source);
-        if (validationResult.Errors.Any())
+        if (validationResult?.Errors.Any() == true)
         {
             LogError(source, type, validationResult.Errors);
-            result = validationResult;
+            result = await Task.FromResult(validationResult);
         }
 
         LogSuccess(source, type);
@@ -46,10 +46,10 @@ public class CommandDispatcherValidationDecorator : CommandDispatcherDecorator
         LogStart(source, type);
 
         var validationResult = Validate<TCommand, CommandResult<TPayload>>(source);
-        if (validationResult.Errors.Any())
+        if (validationResult?.Errors.Any() == true)
         {
             LogError(source, type, validationResult.Errors);
-            result = validationResult;
+            result = await Task.FromResult(validationResult);
         }
 
         LogSuccess(source, type);
@@ -68,7 +68,7 @@ public class CommandDispatcherValidationDecorator : CommandDispatcherDecorator
     private void LogSuccess<TCommand>(TCommand source, Type command) =>
         _logger.LogDebug("Validating command of type {CommandType} With value {Command}  finished at :{EndDateTime}", command, source, DateTime.Now);
 
-    private TServiceResult Validate<TCommand, TServiceResult>(TCommand source) where TServiceResult : ServiceResult, new()
+    private TServiceResult? Validate<TCommand, TServiceResult>(TCommand source) where TServiceResult : ServiceResult, new()
     {
         TServiceResult result = default;
         var validator = _service.GetService<IValidator<TCommand>>();
